@@ -37,16 +37,28 @@ export function Chat() {
     localStorage.setItem('audience', audience);
   }, [audience]);
 
-  // Auto-create session on first visit
+  // Auto-create / validate session on load
   React.useEffect(() => {
-    if (!sessionsLoading && sessions?.length === 0 && !createSession.isPending) {
+    if (sessionsLoading || createSession.isPending) return;
+
+    if (!sessions || sessions.length === 0) {
+      // No sessions on server — create one fresh
+      sessionStorage.removeItem('activeSessionId');
       createSession.mutate(undefined, {
         onSuccess: (newSession) => setSessionId(newSession.id)
       });
-    } else if (!sessionsLoading && sessions?.length && !sessionId) {
+      return;
+    }
+
+    // Sessions exist — validate stored ID is still live
+    const storedId = sessionId;
+    const stillExists = storedId && sessions.some(s => s.id === storedId);
+    if (!stillExists) {
+      // Stale or missing — pick the first available
+      sessionStorage.removeItem('activeSessionId');
       setSessionId(sessions[0].id);
     }
-  }, [sessions, sessionsLoading, sessionId, createSession.isPending]);
+  }, [sessions, sessionsLoading, createSession.isPending]);
 
   React.useEffect(() => {
     if (scrollRef.current) {
@@ -58,7 +70,21 @@ export function Chat() {
     if (!input.trim() || !sessionId) return;
     const content = input;
     setInput("");
-    sendMessage.mutate({ session_id: sessionId, content, audience });
+    sendMessage.mutate({ session_id: sessionId, content, audience }, {
+      onError: (err) => {
+        // If session no longer exists on server, create a new one and retry
+        if (err.message?.includes('404') || err.message?.includes('Session not found')) {
+          sessionStorage.removeItem('activeSessionId');
+          setSessionId(null);
+          createSession.mutate(undefined, {
+            onSuccess: (newSession) => {
+              setSessionId(newSession.id);
+              sendMessage.mutate({ session_id: newSession.id, content, audience });
+            }
+          });
+        }
+      }
+    });
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
