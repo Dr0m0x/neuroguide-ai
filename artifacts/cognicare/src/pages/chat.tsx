@@ -1,4 +1,3 @@
-import { useState, useEffect, useRef } from "wouter"; // wouter uses standard react for its Link/Route, wait no
 import React from "react";
 import { useSessions, useCreateSession, useDeleteSession, useMessages, useSendMessage, useHealthz } from "@/hooks/use-rag";
 import { Button } from "@/components/ui/button";
@@ -8,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { AlertCircle, FileText, Send, Trash2, User, Bot, Plus, Loader2, Link2, ShieldAlert, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { AlertCircle, FileText, Send, Trash2, User, Bot, Plus, Loader2, Link2, ShieldAlert, AlertTriangle, CheckCircle2, Brain } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { format } from "date-fns";
