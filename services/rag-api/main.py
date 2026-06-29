@@ -149,6 +149,19 @@ def chat(body: MessageInput):
         )
     except RuntimeError as e:
         raise HTTPException(status_code=503, detail=str(e))
+    except Exception as e:
+        err = str(e)
+        if "insufficient_quota" in err or "RateLimitError" in type(e).__name__:
+            raise HTTPException(
+                status_code=402,
+                detail="OpenAI quota exceeded. Please add billing credits at platform.openai.com → Billing.",
+            )
+        if "AuthenticationError" in type(e).__name__ or "invalid_api_key" in err:
+            raise HTTPException(
+                status_code=401,
+                detail="Invalid OpenAI API key. Please check your key in the Secrets panel.",
+            )
+        raise HTTPException(status_code=500, detail=f"Pipeline error: {err}")
 
     assistant_msg = Message(
         id=str(uuid.uuid4()),

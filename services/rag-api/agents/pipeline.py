@@ -28,10 +28,62 @@ from knowledge.documents import KNOWLEDGE_DOCUMENTS
 _vectorizer = TfidfVectorizer(
     stop_words="english",
     ngram_range=(1, 2),
-    max_features=5000,
+    max_features=8000,
+    sublinear_tf=True,
 )
-_corpus = [f"{doc['title']} {doc['content']}" for doc in KNOWLEDGE_DOCUMENTS]
+_corpus = [f"{doc['title']} {doc['title']} {doc['content']}" for doc in KNOWLEDGE_DOCUMENTS]  # title weighted 2x
 _tfidf_matrix = _vectorizer.fit_transform(_corpus)
+
+# ---------------------------------------------------------------------------
+# Query expansion — map casual / misspelled terms to indexed vocabulary
+# ---------------------------------------------------------------------------
+
+_QUERY_EXPANSIONS: dict[str, str] = {
+    "alzheimers": "alzheimer's disease dementia",
+    "alzheimer": "alzheimer's disease dementia",
+    "alz": "alzheimer's disease dementia",
+    "dementia": "alzheimer's disease dementia cognitive impairment",
+    "memory loss": "alzheimer's disease memory cognitive impairment",
+    "memory problems": "alzheimer's disease memory cognitive decline",
+    "forgetfulness": "memory loss cognitive impairment alzheimer",
+    "mci": "mild cognitive impairment mci",
+    "mild cognitive": "mild cognitive impairment mci",
+    "depression": "depression late-life depressive cognitive",
+    "anxiety": "anxiety generalized cognitive worry",
+    "sleep": "sleep glymphatic insomnia cognitive",
+    "exercise": "exercise physical activity aerobic cognitive brain",
+    "diet": "diet mind mediterranean nutrition cognitive",
+    "caregiver": "caregiver dementia caregiving burnout burden",
+    "brain health": "brain health cognitive reserve neuroplasticity",
+    "genetics": "apoe gene genetic risk alzheimer's",
+    "medication": "treatment cholinesterase inhibitor memantine donepezil",
+    "treatment": "treatment cholinesterase inhibitor memantine lecanemab",
+    "gut": "gut microbiome brain axis cognitive",
+    "omega": "omega-3 fatty acid dha epa cognitive",
+    "loneliness": "social isolation loneliness cognitive dementia",
+    "trauma": "ptsd trauma dementia hippocampus",
+    "head injury": "traumatic brain injury tbi dementia cte",
+    "tbi": "traumatic brain injury tbi dementia",
+    "biomarker": "biomarker amyloid tau blood plasma p-tau",
+    "blood test": "blood biomarker plasma p-tau amyloid",
+    "lecanemab": "lecanemab anti-amyloid immunotherapy clarity ad",
+    "leqembi": "lecanemab anti-amyloid immunotherapy clarity ad",
+    "donanemab": "donanemab anti-amyloid immunotherapy trailblazer",
+    "apoe": "apoe4 genetic risk alzheimer's epsilon",
+    "inflammation": "neuroinflammation microglia trem2 cytokine",
+    "vascular": "vascular cognitive impairment dementia stroke",
+    "cognitive reserve": "cognitive reserve education bilingualism brain resilience",
+    "social": "social engagement loneliness isolation cognitive",
+}
+
+def _expand_query(query: str) -> str:
+    """Expand casual / misspelled queries with relevant indexed vocabulary."""
+    q_lower = query.lower().strip()
+    expansions = [query]
+    for key, expansion in _QUERY_EXPANSIONS.items():
+        if key in q_lower:
+            expansions.append(expansion)
+    return " ".join(expansions)
 
 
 def _get_openai_client() -> OpenAI:
@@ -50,15 +102,14 @@ class RetrievalAgent:
 
     name = "Retrieval Agent"
 
-    def run(self, query: str, top_k: int = 4) -> tuple[list[dict], str]:
-        query_vec = _vectorizer.transform([query])
+    def run(self, query: str, top_k: int = 5) -> tuple[list[dict], str]:
+        expanded = _expand_query(query)
+        query_vec = _vectorizer.transform([expanded])
         scores = cosine_similarity(query_vec, _tfidf_matrix).flatten()
         top_indices = np.argsort(scores)[::-1][:top_k]
 
         retrieved = []
         for idx in top_indices:
-            if scores[idx] < 0.01:
-                continue
             doc = KNOWLEDGE_DOCUMENTS[idx]
             retrieved.append({
                 **doc,
@@ -66,7 +117,8 @@ class RetrievalAgent:
             })
 
         trace = (
-            f"Retrieved {len(retrieved)} documents for query: '{query[:80]}'. "
+            f"Retrieved {len(retrieved)} documents for query: '{query[:80]}' "
+            f"(expanded to {len(expanded.split())} terms). "
             f"Top document: '{retrieved[0]['title']}' (score={retrieved[0]['relevance_score']})"
             if retrieved
             else f"No relevant documents found for query: '{query[:80]}'"
