@@ -1,0 +1,42 @@
+kind = "web"
+previewPath = "/"
+title = "CogniCare"
+version = "1.0.0"
+id = "artifacts/cognicare"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = ["/"]
+localPort = 26187
+
+[services.development]
+run = "pnpm --filter @workspace/cognicare run dev"
+
+[services.production]
+build = ["pnpm", "--filter", "@workspace/cognicare", "run", "build"]
+publicDir = "artifacts/cognicare/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "26187"
+BASE_PATH = "/"
+
+[[services]]
+name = "rag-api"
+paths = ["/rag"]
+localPort = 5001
+
+[services.development]
+run = "bash /home/runner/workspace/services/rag-api/start.sh"
+
+[services.env]
+PORT = "5001"
