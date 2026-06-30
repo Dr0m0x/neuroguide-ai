@@ -1,0 +1,222 @@
+Abstract
+
+Artificial intelligence has become increasingly capable of supporting healthcare education through natural language processing, machine learning, and knowledge retrieval techniques. However, general-purpose large language models frequently generate inaccurate or unsupported medical information because they rely on static training data and lack mechanisms for validating responses against authoritative sources. These limitations are particularly concerning within cognitive health, where patients and caregivers require reliable educational information regarding Alzheimer's disease, mild cognitive impairment, dementia, genetics, and lifestyle interventions.
+
+This project proposes the development of NeuroGuide AI, an explainable multi-agent artificial intelligence platform that combines Retrieval-Augmented Generation (RAG), neural networks, explainable artificial intelligence (XAI), and specialized AI agents to deliver evidence-based cognitive health education. Unlike traditional chatbots, NeuroGuide AI will coordinate multiple autonomous agents responsible for document retrieval, clinical reasoning, fact verification, personalization, and response generation. The platform will also incorporate a neural network trained on publicly available Alzheimer's datasets to provide educational risk assessments while utilizing SHAP explainability techniques to improve transparency.
+
+The project will employ quantitative and qualitative evaluation methodologies including RAGAS metrics, usability testing, System Usability Scale (SUS) surveys, response latency measurements, expert review, and comparative experiments against baseline single-agent RAG systems. The research seeks to demonstrate that combining explainable AI with multi-agent retrieval architectures improves factual accuracy, user trust, and educational value while reducing hallucinations.
+
+Keywords: Artificial Intelligence, Retrieval-Augmented Generation, Multi-Agent Systems, Neural Networks, Explainable AI, Alzheimer's Disease, Cognitive Health, Large Language Models
+
+Proposal
+Project Title
+
+NeuroGuide AI: An Explainable Multi-Agent Artificial Intelligence Platform for Personalized Cognitive Health Education Using Neural Networks and Retrieval-Augmented Generation
+
+Statement of the Project
+
+The rapid advancement of large language models has transformed how users access medical information. Despite these advancements, current conversational AI systems remain susceptible to hallucinations, outdated knowledge, and limited transparency. These shortcomings present significant risks within healthcare, where inaccurate information may negatively influence user decision-making.
+
+This capstone project proposes the development of NeuroGuide AI, an intelligent educational platform designed specifically for cognitive health education. Rather than functioning as a traditional chatbot, the system will integrate multiple artificial intelligence techniques learned throughout the Master of Science in Artificial Intelligence curriculum.
+
+The platform will combine Retrieval-Augmented Generation with specialized AI agents capable of independently retrieving scientific literature, validating evidence, reasoning across multiple sources, and producing user-friendly educational responses. Additionally, the platform will incorporate a neural network trained on publicly available Alzheimer's disease datasets to estimate educational risk categories based on user-provided demographic and lifestyle information. These predictions will not provide medical diagnoses but instead demonstrate explainable machine learning through SHAP feature attribution.
+
+The overall architecture will consist of:
+
+Hybrid Retrieval-Augmented Generation using dense and sparse retrieval
+Multiple autonomous AI agents coordinated through LangGraph
+Large Language Models for response generation
+Neural network–based educational risk prediction
+Explainable AI using SHAP
+FastAPI backend
+React or Gradio frontend
+FAISS vector database
+Cloud deployment
+
+The project demonstrates the integration of machine learning, deep learning, natural language processing, information retrieval, software engineering, cloud computing, human-computer interaction, explainable AI, and ethical AI into a single production-ready system.
+
+Research Questions
+Primary Research Question
+
+Can an explainable multi-agent Retrieval-Augmented Generation architecture produce more accurate, trustworthy, and transparent cognitive health educational responses than a traditional single-agent language model?
+
+Secondary Research Questions
+
+RQ1
+
+Does coordinating specialized AI agents improve response quality compared to monolithic chatbot architectures?
+
+RQ2
+
+Can neural networks provide meaningful educational risk assessments when combined with explainable artificial intelligence techniques?
+
+RQ3
+
+How does hybrid document retrieval affect factual grounding and hallucination reduction?
+
+RQ4
+
+How do users perceive trust, transparency, and usability within an explainable multi-agent healthcare education platform?
+
+Hypothesis
+
+The proposed multi-agent architecture will significantly outperform a baseline Retrieval-Augmented Generation chatbot in terms of factual accuracy, citation quality, user trust, explainability, and educational usefulness. Furthermore, incorporating explainable neural network predictions through SHAP will improve user understanding of AI-generated recommendations while maintaining ethical transparency.
+
+Proposed AI Technologies
+
+The project integrates multiple AI disciplines studied throughout the graduate program.
+
+Machine Learning
+Logistic Regression
+Random Forest
+XGBoost
+Deep Learning
+TensorFlow
+PyTorch
+Feed-forward Neural Networks
+Natural Language Processing
+Sentence Transformers
+Embeddings
+Prompt Engineering
+Retrieval-Augmented Generation
+FAISS
+ChromaDB
+Hybrid Search
+Cross-Encoder Re-ranking
+Multi-Agent AI
+LangGraph
+AutoGen
+Specialized autonomous agents
+Explainable AI
+SHAP
+Feature attribution
+Model interpretation
+Human-Computer Interaction
+Accessibility evaluation
+User-centered interface design
+System Usability Scale (SUS)
+Responsible AI
+Bias mitigation
+Hallucination detection
+Medical disclaimers
+Transparent citations
+Proposed System Architecture
+
+The proposed architecture consists of five collaborating AI agents.
+
+Agent 1 — Retrieval Agent
+
+Retrieves evidence from PubMed, NIH, WHO, MedlinePlus, Alzheimer's Association, and peer-reviewed literature.
+
+Agent 2 — Clinical Reasoning Agent
+
+Synthesizes retrieved evidence into coherent explanations.
+
+Agent 3 — Validation Agent
+
+Cross-checks generated responses against retrieved evidence while identifying unsupported claims.
+
+Agent 4 — Personalization Agent
+
+Produces educational recommendations based on user characteristics including age, APOE status, family history, exercise, sleep, and cardiovascular risk factors.
+
+Agent 5 — Communication Agent
+
+Rewrites responses for multiple audiences including patients, caregivers, students, and clinicians.
+
+Datasets
+
+Potential datasets include:
+
+Alzheimer's Disease Neuroimaging Initiative (ADNI)
+OpenNeuro
+Kaggle Alzheimer's datasets
+PubMed
+MedlinePlus
+Alzheimer's Association
+NIH
+WHO
+CDC
+Evaluation
+
+Performance will be evaluated using:
+
+AI Performance
+RAGAS Faithfulness
+Answer Relevancy
+Context Precision
+Context Recall
+Machine Learning
+Accuracy
+Precision
+Recall
+F1 Score
+ROC-AUC
+Explainability
+SHAP Visualizations
+Feature Importance
+User Interpretability
+HCI
+System Usability Scale (SUS)
+Accessibility Review
+User Satisfaction Survey
+Cognitive Load Assessment
+System Performance
+Latency
+Memory Usage
+Response Time
+Hallucination Rate
+Ethical Considerations
+
+The project recognizes several ethical challenges associated with healthcare artificial intelligence.
+
+The platform will clearly identify itself as an educational system rather than a diagnostic tool. Every response will include appropriate medical disclaimers encouraging users to consult licensed healthcare professionals for clinical decisions.
+
+Bias mitigation strategies will include evaluating responses across diverse demographic groups and ensuring that retrieved information originates from authoritative healthcare organizations.
+
+No protected health information will be collected or permanently stored.
+
+All generated responses will provide citations to the retrieved evidence to promote transparency and user trust.
+
+Explainable AI techniques will provide users with understandable explanations of neural network predictions rather than opaque probability scores.
+
+Expected Deliverables
+Fully functional multi-agent AI platform
+Retrieval-Augmented Generation pipeline
+Neural network prediction model
+Explainable AI dashboard using SHAP
+Interactive web interface
+Cloud deployment
+Experimental evaluation report
+Capstone research paper (APA 7)
+Public GitHub repository with documentation
+Demonstration of Program Learning Outcomes
+Outcome 1
+
+Apply artificial intelligence principles to solve complex real-world problems.
+
+This project develops an intelligent healthcare education platform integrating machine learning, deep learning, natural language processing, retrieval systems, and multi-agent reasoning to address the real-world challenge of delivering trustworthy cognitive health information.
+
+Outcome 2
+
+Demonstrate independent research skills using artificial intelligence literature.
+
+The project will synthesize current research from peer-reviewed journals, biomedical databases, and authoritative healthcare organizations while experimentally evaluating multiple AI architectures.
+
+Outcome 3
+
+Develop and evaluate artificial intelligence solutions.
+
+The project includes the design, implementation, deployment, and evaluation of an end-to-end AI application using quantitative metrics, usability studies, and comparative experiments.
+
+Outcome 4
+
+Evaluate ethical, legal, and societal implications of artificial intelligence.
+
+The platform incorporates explainability, transparency, bias mitigation, medical disclaimers, and responsible AI practices to ensure ethical deployment within a healthcare education context.
+
+Outcome 5
+
+Communicate artificial intelligence concepts effectively.
+
+The project includes technical documentation, a research paper, architecture diagrams, experimental analysis, and an interactive demonstration designed for both technical and non-technical audiences.
