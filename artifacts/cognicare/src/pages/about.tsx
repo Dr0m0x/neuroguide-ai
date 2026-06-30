@@ -7,10 +7,10 @@ export function About() {
       <div className="max-w-4xl w-full mx-auto space-y-12">
         <section className="space-y-4">
           <h1 className="text-4xl font-bold font-serif tracking-tight text-primary" data-testid="text-about-title">
-            About CogniCare
+            About Neuroguide AI
           </h1>
           <p className="text-lg text-muted-foreground leading-relaxed">
-            CogniCare is an advanced educational platform designed to bridge the gap between complex medical literature and accessible health information. Utilizing a multi-agent Retrieval-Augmented Generation (RAG) architecture, it synthesizes peer-reviewed evidence into clear, understandable insights for both patients and clinicians.
+            Neuroguide AI is an advanced educational platform designed to bridge the gap between complex medical literature and accessible health information. Utilizing a multi-agent Retrieval-Augmented Generation (RAG) architecture, it synthesizes peer-reviewed evidence into clear, understandable insights for both patients and clinicians.
           </p>
         </section>
 
@@ -66,7 +66,7 @@ export function About() {
         <section className="mt-12 p-6 bg-muted rounded-xl border border-muted-foreground/20 text-center space-y-3">
           <h3 className="font-bold text-foreground uppercase tracking-wide text-sm">Disclaimer</h3>
           <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
-            CogniCare is designed strictly for educational and informational purposes. It is not a diagnostic tool, nor does it provide medical advice, treatment recommendations, or professional clinical judgments. Always consult with a qualified healthcare provider regarding any medical condition or health objectives.
+            Neuroguide AI is designed strictly for educational and informational purposes. It is not a diagnostic tool, nor does it provide medical advice, treatment recommendations, or professional clinical judgments. Always consult with a qualified healthcare provider regarding any medical condition or health objectives.
           </p>
         </section>
       </div>

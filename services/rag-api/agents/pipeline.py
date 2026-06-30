@@ -1,5 +1,5 @@
 """
-Multi-Agent RAG Pipeline for CogniCare
+Multi-Agent RAG Pipeline for Neuroguide AI
 ========================================
 Five specialised agents:
   1. Retrieval Agent      — Hybrid sparse (TF-IDF) + dense (LSA) retrieval

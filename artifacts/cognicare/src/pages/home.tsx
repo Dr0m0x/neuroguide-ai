@@ -17,7 +17,7 @@ export function Home() {
             Evidence-Based Cognitive Health
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto" data-testid="text-home-subtitle">
-            CogniCare is an intelligent, multi-agent research library. Ask questions and get answers grounded in peer-reviewed medical literature.
+            Neuroguide AI is an intelligent, multi-agent research library. Ask questions and get answers grounded in peer-reviewed medical literature.
           </p>
           <div className="pt-4">
             <Link href="/chat">

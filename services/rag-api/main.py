@@ -32,7 +32,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="CogniCare RAG API",
+    title="Neuroguide AI RAG API",
     description="Multi-agent Retrieval-Augmented Generation for cognitive health education",
     version="2.0.0",
     lifespan=lifespan,
