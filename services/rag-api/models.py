@@ -8,6 +8,7 @@ class MessageInput(BaseModel):
     session_id: str
     content: str
     audience: str = "patient"
+    user_profile: Optional[dict] = None
 
 
 class Citation(BaseModel):
@@ -62,3 +63,38 @@ class Stats(BaseModel):
     avg_confidence: float
     topics_covered: int
     avg_response_time_ms: int
+
+
+# ── Risk Assessment ──────────────────────────────────────────────────────────
+
+class RiskInput(BaseModel):
+    age: int = Field(..., ge=18, le=110)
+    education_years: int = Field(..., ge=0, le=30)
+    hypertension: bool = False
+    obesity: bool = False
+    smoking: bool = False
+    depression: bool = False
+    physical_inactivity: bool = False
+    diabetes: bool = False
+    social_isolation: bool = False
+    hearing_loss: bool = False
+    excess_alcohol: bool = False
+    tbi_history: bool = False
+    high_cholesterol: bool = False
+    vision_loss: bool = False
+
+
+class ShapAttribution(BaseModel):
+    feature: str
+    key: str
+    value: float
+    shap_value: float
+    impact: str
+
+
+class RiskResult(BaseModel):
+    risk_category: str
+    risk_color: str
+    probabilities: dict
+    top_attributions: list[ShapAttribution]
+    disclaimer: str

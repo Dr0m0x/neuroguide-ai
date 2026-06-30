@@ -1,4 +1,4 @@
-import { api } from "@/lib/api";
+import { api, type RiskInput } from "@/lib/api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useSessions() {
@@ -40,7 +40,7 @@ export function useSendMessage() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: api.sendMessage,
-    onSuccess: (data, variables) => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['messages', variables.session_id] });
     },
   });
@@ -64,5 +64,11 @@ export function useHealthz() {
   return useQuery({
     queryKey: ['healthz'],
     queryFn: api.getHealthz,
+  });
+}
+
+export function useRiskAssessment() {
+  return useMutation({
+    mutationFn: (input: RiskInput) => api.assessRisk(input),
   });
 }

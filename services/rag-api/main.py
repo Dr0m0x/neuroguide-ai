@@ -12,40 +12,29 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from models import (
-    Message,
-    MessageInput,
-    Session,
-    SessionCreate,
-    Topic,
-    Stats,
+    Message, MessageInput, Session, SessionCreate,
+    Topic, Stats, RiskInput, RiskResult, ShapAttribution,
 )
 from storage import (
-    create_session,
-    get_session,
-    list_sessions,
-    delete_session,
-    add_message,
-    get_messages,
-    get_stats,
+    create_session, get_session, list_sessions, delete_session,
+    add_message, get_messages, get_stats,
 )
 from knowledge.documents import TOPIC_CATEGORIES, KNOWLEDGE_DOCUMENTS
 
 
-# ---------------------------------------------------------------------------
-# Lifespan — warm up the TF-IDF index on startup
-# ---------------------------------------------------------------------------
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     from agents.pipeline import get_pipeline
+    from agents.risk_model import get_risk_model
     get_pipeline()
+    get_risk_model()
     yield
 
 
 app = FastAPI(
     title="CogniCare RAG API",
     description="Multi-agent Retrieval-Augmented Generation for cognitive health education",
-    version="1.0.0",
+    version="2.0.0",
     lifespan=lifespan,
     root_path="/rag",
 )
@@ -58,10 +47,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-# ---------------------------------------------------------------------------
-# Error handler
-# ---------------------------------------------------------------------------
 
 @app.exception_handler(Exception)
 async def global_error_handler(request: Request, exc: Exception):
@@ -146,6 +131,7 @@ def chat(body: MessageInput):
             query=body.content,
             audience=body.audience,
             conversation_history=history,
+            user_profile=body.user_profile,
         )
     except RuntimeError as e:
         raise HTTPException(status_code=503, detail=str(e))
@@ -177,6 +163,29 @@ def chat(body: MessageInput):
 
 
 # ---------------------------------------------------------------------------
+# Routes: Risk Assessment (XAI)
+# ---------------------------------------------------------------------------
+
+@app.post("/risk-assessment", response_model=RiskResult)
+def risk_assessment(body: RiskInput):
+    from agents.risk_model import get_risk_model
+
+    features = body.model_dump()
+    try:
+        result = get_risk_model().predict(features)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Risk model error: {e}")
+
+    return RiskResult(
+        risk_category=result["risk_category"],
+        risk_color=result["risk_color"],
+        probabilities=result["probabilities"],
+        top_attributions=[ShapAttribution(**a) for a in result["top_attributions"]],
+        disclaimer=result["disclaimer"],
+    )
+
+
+# ---------------------------------------------------------------------------
 # Routes: Topics & Stats
 # ---------------------------------------------------------------------------
 
@@ -184,11 +193,8 @@ def chat(body: MessageInput):
 def get_topics():
     return [
         Topic(
-            id=t["id"],
-            name=t["name"],
-            description=t["description"],
-            document_count=t["document_count"],
-            icon=t["icon"],
+            id=t["id"], name=t["name"], description=t["description"],
+            document_count=t["document_count"], icon=t["icon"],
         )
         for t in TOPIC_CATEGORIES
     ]
@@ -206,10 +212,6 @@ def get_system_stats():
         avg_response_time_ms=2400,
     )
 
-
-# ---------------------------------------------------------------------------
-# Entry point (for direct uvicorn invocation)
-# ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
     import uvicorn

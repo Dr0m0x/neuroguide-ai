@@ -1,0 +1,2 @@
+- [SHAP multi-class API](shap-multiclass.md) — SHAP >= 0.45 returns 3D ndarray for RF, not a list; handle both shapes.
+- [CogniCare architecture](cognicare-arch.md) — 5-agent pipeline order and key integration points.
