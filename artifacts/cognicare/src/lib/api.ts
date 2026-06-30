@@ -25,6 +25,7 @@ export type RiskResult = {
 export type RiskInput = {
   age: number
   education_years: number
+  apoe4_alleles: 0 | 1 | 2
   hypertension: boolean
   obesity: boolean
   smoking: boolean

@@ -17,6 +17,12 @@ import type { RiskResult, UserProfile } from "@/lib/api";
 
 // ── Risk factor definitions ────────────────────────────────────────────────
 
+const APOE4_OPTIONS = [
+  { value: 0, label: "No APOE ε4 alleles",         sublabel: "ε2/ε2, ε2/ε3, ε3/ε3" },
+  { value: 1, label: "1 APOE ε4 allele",           sublabel: "Heterozygous — ε3/ε4" },
+  { value: 2, label: "2 APOE ε4 alleles (4/4)",    sublabel: "Homozygous — ε4/ε4" },
+];
+
 const BINARY_FACTORS = [
   { key: "hypertension",        label: "Hypertension" },
   { key: "obesity",             label: "Obesity (BMI ≥ 30)" },
@@ -75,6 +81,7 @@ function RiskPanel({
   const [open, setOpen] = React.useState(false);
   const [age, setAge] = React.useState(65);
   const [edu, setEdu] = React.useState(12);
+  const [apoe4, setApoe4] = React.useState<0 | 1 | 2>(0);
   const [checked, setChecked] = React.useState<Record<string, boolean>>({});
   const [result, setResult] = React.useState<RiskResult | null>(() => {
     const saved = localStorage.getItem("riskResult");
@@ -87,9 +94,10 @@ function RiskPanel({
   React.useEffect(() => {
     const saved = localStorage.getItem("userProfile");
     if (saved) {
-      const p = JSON.parse(saved) as UserProfile;
+      const p = JSON.parse(saved) as UserProfile & { apoe4_alleles?: number };
       setAge(p.age);
       setEdu(p.education_years);
+      if (p.apoe4_alleles !== undefined) setApoe4(p.apoe4_alleles as 0 | 1 | 2);
       const c: Record<string, boolean> = {};
       p.risk_factors.forEach(k => { c[k] = true; });
       setChecked(c);
@@ -102,6 +110,7 @@ function RiskPanel({
     const input = {
       age,
       education_years: edu,
+      apoe4_alleles: apoe4,
       hypertension:        checked["hypertension"]        ?? false,
       obesity:             checked["obesity"]             ?? false,
       smoking:             checked["smoking"]             ?? false,
@@ -126,7 +135,7 @@ function RiskPanel({
           risk_factors: activeFactors,
           risk_category: res.risk_category,
         };
-        localStorage.setItem("userProfile", JSON.stringify(profile));
+        localStorage.setItem("userProfile", JSON.stringify({ ...profile, apoe4_alleles: apoe4 }));
         onProfileChange(profile);
       },
     });
@@ -178,9 +187,31 @@ function RiskPanel({
             </div>
           </div>
 
+          {/* APOE4 status */}
+          <div>
+            <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-2">APOE ε4 Status</p>
+            <div className="space-y-1">
+              {APOE4_OPTIONS.map(opt => (
+                <button
+                  key={opt.value}
+                  onClick={() => setApoe4(opt.value as 0 | 1 | 2)}
+                  className={cn(
+                    "w-full text-left px-2.5 py-1.5 rounded-md border text-xs transition-colors",
+                    apoe4 === opt.value
+                      ? "border-primary bg-primary/10 text-primary font-medium"
+                      : "border-muted bg-background text-muted-foreground hover:border-primary/50"
+                  )}
+                >
+                  <div className="font-medium leading-tight">{opt.label}</div>
+                  <div className="text-[10px] opacity-60 mt-0.5">{opt.sublabel}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Risk factor checkboxes */}
           <div>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-2">Risk Factors</p>
+            <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-2">Modifiable Risk Factors</p>
             <div className="space-y-1.5 max-h-44 overflow-y-auto pr-1">
               {BINARY_FACTORS.map(f => (
                 <div key={f.key} className="flex items-center gap-2">
@@ -330,7 +361,7 @@ export function Chat() {
   return (
     <div className="flex-1 flex overflow-hidden bg-background">
       {/* ── Sidebar ── */}
-      <div className="w-64 border-r bg-card flex flex-col hidden md:flex">
+      <div className="w-64 border-r bg-card flex flex-col">
         {/* Sessions header */}
         <div className="p-4 border-b flex items-center justify-between">
           <h2 className="font-semibold text-lg text-primary" data-testid="text-sidebar-title">Sessions</h2>
@@ -344,8 +375,8 @@ export function Chat() {
           </Button>
         </div>
 
-        {/* Session list */}
-        <ScrollArea className="flex-1">
+        {/* Session list — capped so Risk Profile stays visible */}
+        <ScrollArea className="max-h-48 overflow-y-auto">
           <div className="p-2 space-y-1">
             {sessionsLoading ? (
               <div className="p-4 text-center text-sm text-muted-foreground">Loading…</div>

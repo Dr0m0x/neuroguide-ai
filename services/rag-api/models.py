@@ -70,6 +70,7 @@ class Stats(BaseModel):
 class RiskInput(BaseModel):
     age: int = Field(..., ge=18, le=110)
     education_years: int = Field(..., ge=0, le=30)
+    apoe4_alleles: int = Field(0, ge=0, le=2)   # 0 = none, 1 = heterozygous, 2 = homozygous
     hypertension: bool = False
     obesity: bool = False
     smoking: bool = False
