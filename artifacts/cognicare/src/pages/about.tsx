@@ -1,5 +1,48 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BrainCircuit, Database, FileSearch, ShieldCheck, Cpu } from "lucide-react";
+import { BrainCircuit, Database, FileSearch, ShieldCheck, Cpu, Network, Sparkles, MessageSquareText, Layers } from "lucide-react";
+
+const AI_TECHNOLOGIES = [
+  {
+    icon: Layers,
+    title: "Machine Learning",
+    desc: "A scikit-learn RandomForestClassifier (200 trees) trained on Lancet Commission 2024 risk-factor data classifies dementia risk as Low, Moderate, or High. TruncatedSVD (LSA) builds dense semantic embeddings for document retrieval.",
+  },
+  {
+    icon: Cpu,
+    title: "Deep Learning",
+    desc: "OpenAI's gpt-4o-mini, a transformer-based large language model, powers the Reasoning and Synthesis agents that interpret retrieved evidence and draft grounded responses.",
+  },
+  {
+    icon: MessageSquareText,
+    title: "Natural Language Processing",
+    desc: "TF-IDF vectorization with n-gram (1,2) sparse features, a custom query-expansion dictionary for casual/misspelled medical terms, and audience-adaptive language generation (patient vs. clinician register).",
+  },
+  {
+    icon: FileSearch,
+    title: "Retrieval-Augmented Generation",
+    desc: "Hybrid retrieval combines TF-IDF (sparse, 45% weight) and LSA/SVD (dense, 55% weight) cosine similarity across 28 knowledge documents, grounding every generated answer in cited source excerpts.",
+  },
+  {
+    icon: Network,
+    title: "Multi-Agent AI",
+    desc: "A 5-agent pipeline — Personalization, Retrieval, Reasoning, Validation, and Synthesis — orchestrates the full question-answering flow, each agent handling a distinct responsibility.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Explainable AI",
+    desc: "SHAP TreeExplainer computes per-feature attributions for every risk prediction, visualized as a directional bar chart. A Validation Agent scores response confidence and an Agent Trace UI exposes each reasoning step.",
+  },
+  {
+    icon: Sparkles,
+    title: "Human-Computer Interaction",
+    desc: "A React + Vite interface with TanStack Query and shadcn/ui offers a patient/clinician toggle, collapsible citation and agent-trace views, confidence badges, and a persistent Risk Profile panel that personalizes chat responses.",
+  },
+  {
+    icon: BrainCircuit,
+    title: "Engineering & Infrastructure",
+    desc: "FastAPI (Python) serves the RAG and risk-model pipeline; Express (Node.js) serves the API layer; React + Vite renders the frontend — all orchestrated within a single pnpm monorepo.",
+  },
+];
 
 export function About() {
   return (
@@ -49,6 +92,18 @@ export function About() {
         </section>
 
         <section className="space-y-6">
+          <h2 className="text-2xl font-bold font-serif border-b pb-2">Proposed AI Technologies</h2>
+          <p className="text-muted-foreground">
+            Neuroguide AI is built on a concrete, working stack — not a wishlist. Each category below maps to specific libraries, models, and techniques actually implemented in this application.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            {AI_TECHNOLOGIES.map((tech) => (
+              <TechCard key={tech.title} icon={tech.icon} title={tech.title} desc={tech.desc} />
+            ))}
+          </div>
+        </section>
+
+        <section className="space-y-6">
           <h2 className="text-2xl font-bold font-serif border-b pb-2">Knowledge Sources</h2>
           <p className="text-muted-foreground mb-4">
             Our database is continuously updated with public-domain and open-access materials from leading health organizations.
@@ -90,6 +145,27 @@ function AgentStep({ number, icon: Icon, title, desc }: { number: number, icon: 
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground relative z-10">{desc}</p>
+      </CardContent>
+    </Card>
+  );
+}
+
+function TechCard({ icon: Icon, title, desc }: { icon: any, title: string, desc: string }) {
+  return (
+    <Card className="relative overflow-hidden border-muted shadow-sm">
+      <div className="absolute top-0 right-0 p-4 opacity-5">
+        <Icon className="w-20 h-20" />
+      </div>
+      <CardHeader className="pb-2">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+            <Icon className="w-4 h-4" />
+          </div>
+          <CardTitle className="text-base text-primary">{title}</CardTitle>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm text-muted-foreground relative z-10 leading-relaxed">{desc}</p>
       </CardContent>
     </Card>
   );
